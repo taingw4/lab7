@@ -44,7 +44,7 @@ function getQuakes() {
 			mapTypeId: google.maps.MapTypeId.TERRIAN,
 			streetViewControl: false
 		});
-		addQuakeMarkers(quakes, map);
+		addQuakeMarkers(quakes, gov.usgs.quakesMap);
 	});
 }
 
@@ -54,7 +54,21 @@ function addQuakeMarkers(quakes, map) {
 	for (idx = 0; idx < quakes.length; idx++) {
 		quake = quakes[idx];
 		if (quake.location) {
-			
+			quake.mapMarker = new google.maps.Marker({
+				map: map,
+				position: new google.maps.LatLng(quake.location.latitude, quake.location.longitude)
+			});	
+			google.maps.event.addListener(quake.mapMarker, 'click', function() {
+				if (gov.usgs.iw) {
+					gov.usgs.iw.close();
+				}
+				gov.usgs.iw = new google.maps.InfoWindow({
+					content: new Date(quake.datetime).toLocaleString() +
+						': magnitude ' + quake.magnitude + ' at depth of ' +
+						quake.depth + ' meters'
+				});
+				gov.usgs.iw.open(map, this);
+			});	
 		}
 	}
 }
