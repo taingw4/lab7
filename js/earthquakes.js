@@ -30,3 +30,31 @@ $(document).ajaxError(function(event, jqXHR, err){
     alert('Problem obtaining data: ' + jqXHR.statusText);
 });
 
+$(function() {
+	getQuakes();
+});
+
+function getQuakes() {
+	$.getJSON(gov.usgs.quakesUrl, function(quakes) {
+		gov.usgs.quakes = quakes;
+		$('.message').html('Displaying ' + quakes.length + ' earthquakes');
+		gov.usgs.quakesMap = new google.maps.Map($('.map-container')[0], {
+			center: new google.maps.LatLng(0,0),
+			zoom: 2,
+			mapTypeId: google.maps.MapTypeId.TERRIAN,
+			streetViewControl: false
+		});
+		addQuakeMarkers(quakes, map);
+	});
+}
+
+function addQuakeMarkers(quakes, map) {
+	var quake;
+	var idx;
+	for (idx = 0; idx < quakes.length; idx++) {
+		quake = quakes[idx];
+		if (quake.location) {
+			
+		}
+	}
+}
